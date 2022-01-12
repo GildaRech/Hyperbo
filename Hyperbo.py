@@ -189,6 +189,7 @@ class B:
 
     @property
     def card(self):
+        """Cardinals"""
         self.fact, self.is_diff, self.is_same = Common().pfactors(self.n), Common().is_diff, Common().is_same
         if self.is_diff(self.fact)==True and self.S=="Z4":
             return self.U(len(self.fact))
@@ -206,18 +207,21 @@ class B:
             return self.nbr_pointsS4 if self.S=="Z4" else self.nbr_pointsS4+1 if self.S=="Z+" else 4*self.nbr_pointsS4-2 if self.S=="Z" else "cardinal of B_"+str(int(self.n))+" is not defined over "+str(self.S)+" or is infinite"
 
     def add(self, P, Q):
+        """Adding on B_n"""
         xp, yp, xq, yq = P[0], P[1], Q[0], Q[1]
         x=((xp-2*self.n)*(xq-2*self.n)+yp*yq)/(2*self.n)+2*self.n
         y=(yp*(xq-2*self.n)+yq*(xp-2*self.n))/(2*self.n)
         return (x, y)
 
     def double(self, P):
+        """Doubling on B_n"""
         xp, yp = P[0], P[1]
         x=((xp-2*self.n)**2+yp**2)/(2*self.n)+2*self.n
         y=(yp*(xp-2*self.n))/self.n
         return (x, y)
 
     def mul(self, k, P):
+        """multiplying on B_n"""
         self.k, self.P = k, P
         if self.k==0 : raise Exception("Invalid multiplicator k")
         self.k_bin=bin(self.k)[2:]
@@ -230,6 +234,7 @@ class B:
 
     @property
     def card_sum(self):
+        "Sum S_n of cardinals on B_n "
         if not Common().is_diff(Common().pfactors(self.n))==False:
             self.leng=len(Common().pfactors(self.n))
             return self.leng/2-3*(1-3**self.leng)/4
@@ -237,6 +242,7 @@ class B:
     
     @property
     def _productp(self) ->list:
+        """product of prime divisors of n that make up n"""
         _rep=[]
         for self.ki in Common().pfactors(self.n):
             for self.kj in Common().pfactors(self.n):
@@ -246,6 +252,7 @@ class B:
 
     @property
     def pointsZ4(self) ->list:
+        """points on B_n over Z4"""
         if not len(Common().pfactors(self.n))>2:
             _points=[((self.k+2)*self.n+self.n/self.k, (self.k**2-1)*self.n/self.k) for self.k in Common().pfactors(self.n)+[1, self.n]]+self._productp
             __points=[p for p in _points if not _points.count(p)>1]
@@ -253,6 +260,7 @@ class B:
         return self._points
 
     def negativPoints(self, l) ->list :
+        """negative points on B_n"""
         self.l=l;self.rep=[]
         for P in self.l:
              if not P[0]==4*self.n: self.rep.append((P[0], -P[1])), self.rep.append((-P[0]+4*self.n, P[1])), self.rep.append((-P[0]+4*self.n, -P[1]))
@@ -260,6 +268,7 @@ class B:
     
     @property
     def points(self):
+        """points on B_n over different algebraic structures"""
         if self.S=="Z4":
             return self.pointsZ4
         elif self.S=="Z+":
