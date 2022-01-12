@@ -112,6 +112,8 @@ class H(Common):
         else:
             self.morphism=""
         pass
+    
+    @property
     def is_fermat_solvable(self)->bool:
         if (self.n-6)%4==0:
             return False
@@ -128,6 +130,19 @@ class H(Common):
             self.status=str(self.n)+" is Factorizable by Fermat Method ie can be written as difference of two squares"
         self.inf=str(self.start)+str(self.status)+"\n"+str(self.form)+"\n"+str(self.group)+str(self.morphism)
         print(self.inf)
+    
+    @property
+    def card(self):
+        pass
+
+    def add(self, P, Q):
+        xp, yp, xq, yq = P[0], P[1], Q[0], Q[1]
+        pass
+
+    def mul(self, k, P):
+        self.k=k; xp=P[0]; yp=P[1]
+        pass
+
     
 #H(10, "F11").info()
 
