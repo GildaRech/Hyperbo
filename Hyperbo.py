@@ -1,7 +1,6 @@
 #! -*- coding: utf-8 -*-
 import sys, random
 from math import sqrt
-from typing import Collection
 
 
 class Common:
@@ -59,7 +58,6 @@ class Common:
         return self.factor
 
     #@facto
-    #@property
     def pfactors(self, n) ->list: 
         """function that returns prime factors of n"""
         self.l = []; self.n=n
