@@ -96,9 +96,12 @@ class Common:
         self.l.sort()
         return self.l
 
-    def is_square(self, x:int) -> bool:
+    def is_square(self, x:str) -> bool:
         self.x=x
-        if int(sqrt(self.x))**2==x:
+        if "/" in str(self.x):
+            xp1=int(str(self.x)[:str(self.x).index("/")]); xp2=int(str(self.x)[str(self.x).index("/")+1:])
+            if int(sqrt(xp1))**2==xp1 and int(sqrt(xp2))**2==xp2: return True
+        if int(sqrt(int(self.x)))**2==int(self.x):
             return True
         return False
 
@@ -123,7 +126,7 @@ class Common:
                     self.a = self.l[j]; self.l[j] = self.l[j+1]; self.l[j+1]=self.a
         return self.l
 
-class H(Common):
+class H:
     def __init__(self, n:int, S:str) -> None:
         self.n=n
         self.S=S
@@ -153,10 +156,58 @@ class H(Common):
             self.status=str(self.n)+" is Factorizable by Fermat Method ie can be written as difference of two squares"
         self.inf=str(self.start)+str(self.status)+"\n"+str(self.form)+"\n"+str(self.group)+str(self.morphism)
         print(self.inf)
+
+    def is_in_H(self, x):
+        self.x=x
+        if Common().is_square(self.x**2-int(self.n))==True:
+            return True
+        return False
+
+    def negativPoints(self, P) ->list :
+        """negative points on H_n"""
+        self.P=P;self.rep=[]
+        self.rep.append((-self.P[0], -self.P[1])); self.rep.append((self.P[0], -self.P[1])); self.rep.append((-self.P[0], self.P[1])); 
+        return self.rep
     
+
     @property
     def card(self):
+        """ cardinal of H"""
+        if Common().is_prime(self.n)==True and self.n > 2:
+            if self.S=="Z": return 4
+            elif self.S=="Z+": return 1
+            elif self.S=="Q": return "Undifined. Infinite points"
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
+        if self.n=="2":
+            if self.S=="Z" or self.S=="Z+": return 0
+            elif self.S=="Q": return "Undifined."
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
+        if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
+            if self.S=="Z": return 8
+            elif self.S=="Z+": return 2
+            elif self.S=="Q": return "Undifined. Infinite points"
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
         pass
+
+    @property
+    def points(self):
+        """points on H"""
+        if Common().is_prime(self.n)==True and self.n > 2:
+            if self.S=="Z": return [((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))
+            elif self.S=="Z+": return ((self.n+1)/2, (self.n-1)/2)
+            elif self.S=="Q": return "Undifined. Infinite points"
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
+        if self.n=="2":
+            if self.S=="Z" or self.S=="Z+": return "empty set"
+            elif self.S=="Q": return "Undifined."
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
+        if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
+            if self.S=="Z": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))+self.negativPoints(((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2))
+            elif self.S=="Z+": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]
+            elif self.S=="Q": return "Undifined. Infinite points"
+            else: return Exception("Undifined. "+str(self.S)+" not defined")
+       
+
 
     def add(self, P, Q):
         xp, yp, xq, yq = P[0], P[1], Q[0], Q[1]
@@ -172,6 +223,7 @@ class H(Common):
             return Exception("Undifined. "+self.S+" Invalid struture.")
 
     def double(self, P):
+        """doubling on H"""
         xp, yp = P[0], P[1]
         if self.S in ["Z", "Q"]: return (xp**2+yp**2, 2*xp*yp)
         elif self.S.startswith("F"): 
@@ -183,6 +235,7 @@ class H(Common):
             return Exception("Undifined. "+self.S+" Invalid struture.")
 
     def mul(self, k, P):
+        """scalar mulptiplication on H"""
         self.k=k
         if self.k==0 : raise Exception("Invalid multiplicator k")
         self.k=bin(self.k)[2:]; self.k=str(self.k); Q=P
@@ -351,7 +404,9 @@ class B:
 #print(B(15, "Z").add(R, P))
 #print(B(15, "Z").mul(100, P))
 #l=[(80.0, 40.0), (108.0, 72.0), (60.0, 0.0), (256.0, 224.0), (64, 16)]
-#print(B(21, "Z").card)
+#print(B(210, "Z4").points)
 #print(Common().inverse_modulo(3, 7))
-P=(17/15, 8/15); Q=(5/3, 4/3); PP=(1, 12); QQ=(10, 9)
-print(H(18, "F19").add(PP, QQ))
+#P=(17/15, 8/15); Q=(5/3, 4/3); PP=(1, 12); QQ=(10, 9)
+#print(H(18, "F19").add(PP, QQ))$
+#print(Common().is_square(25/16))
+print(H(15, "Z").card)
