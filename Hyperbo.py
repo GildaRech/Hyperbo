@@ -1,12 +1,25 @@
 #! -*- coding: utf-8 -*-
 import sys, random
 from math import sqrt
+#for drawing
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+from matplotlib import pylab
+
 
 
 class Common:
+    """ 
+    This class contains common methods used in hyperbola parametrizations mainly H_n and B_n.
+    This class provides its own verified autonomous functions for primality testing, gcd, inverse modulo, factor, and prime factor.
+    This is for the purpose of reducing dependencies to external libraries
+
+    """
     def __init__(self) -> None:
         pass
     def rabinMiller(self, nbre:int) -> bool:
+        """ The rabinMiller function is for primality testing"""
         self.nbre=nbre
         "returns True or False whether prime or not"
         s = self.nbre - 1
@@ -28,6 +41,10 @@ class Common:
         return True   
     
     def is_prime(self, nbre:int) -> bool:
+        """ This function returns True if a given integer input is prime and False else.
+            It particularly uses the rabinMiller and the below list of first primes less than 1000
+        
+        """
         self.nbre=nbre
         "faster for performance purpose"
         if (self.nbre < 2):
@@ -48,12 +65,18 @@ class Common:
         return self.rabinMiller(self.nbre)
 
     def pgcd(self, a, b):
+        """
+        This function returns the gcd of two given integer inputs
+        """
         if not a>b: a, b =b, a
         while b != 0:
             r= a%b; a=b; b=r
         return a
 
     def extended_euclidean(self, a, b):
+        """
+        This function returns the bezout coefficients that are necessary in the computation of the inverse
+        """
         if not a>b: a, b =b, a
         if b==0:
             d=a; x=1; y=0
@@ -66,12 +89,18 @@ class Common:
         return (d, y, x)
 
     def inverse_modulo(self, a, n):
+        """
+        This function returns the inverse of a given integer in a finite field of characteristic n ie the inverse of the integer a modulo n 
+        """
         if self.pgcd(a, n)>1:
             return "Inverse of "+str(a)+" mod "+str(n)+" does NOT Exist"
         return self.extended_euclidean(a, n)[1]
 
     def facto(self, func):
-        """function that returns a list of factors of n with their degree of multiplicity"""
+        """
+        function that returns a list of factors of n with their degrees of multiplicity.
+        Example: for an integer n=30
+        """
         self.func=func
         self.t=self.func(self.n)
         self.factor = []
@@ -131,7 +160,7 @@ class H:
         self.n=n
         self.S=S
         if not self.S in ["Z", "Q", "Z+"] and not self.S.startswith("F"):
-            print("Not valid algebraic structure, allowed Z, Q, Z+, Z4 or Fp \n")
+            print(str(self.S)+" is Not a valid algebraic structure for object H_"+str(self.n)+"(x, y), allowed are Z, Q, Z+ or Fp \n")
             sys.exit()
         if self.S=="Q":
             self.morphism="There exists a morphism over Q, f: B_"+str(self.n)+"   ------>      H_"+str(self.n)+"(Q)\n                                  (x, y)  |-----> ((x-2*"+str(self.n)+")/2*"+str(self.n)+", y/2*"+str(self.n)+") \n"
@@ -150,7 +179,7 @@ class H:
         self.start="\n________________________General Info on H_"+str(self.n)+": x^2-y^2="+str(self.n)+" over "+str(self.S)+ "________________________\n\n"
         self.form="furthermore H_"+str(self.n)+" is isomorphic to the hyperbola x^2/a^2-y^2/b^2 = 1 with a=b=sqrt("+str(self.n)+")"
         self.group="It forms a group with the additive law defined as for P+Q=(Xp*Xq+Yp*Yq, Xp*Yq+Xq*Yp),\nwith neutral element O=(1, 0).\n"
-        if self.is_fermat_solvable()==False:
+        if self.is_fermat_solvable==False:
             self.status=str(self.n)+" is not Factorizable by Fermat Method ie cannot be represented as difference of two squares"
         else:
             self.status=str(self.n)+" is Factorizable by Fermat Method ie can be written as difference of two squares"
@@ -173,39 +202,43 @@ class H:
     @property
     def card(self):
         """ cardinal of H"""
-        if Common().is_prime(self.n)==True and self.n > 2:
-            if self.S=="Z": return 4
-            elif self.S=="Z+": return 1
-            elif self.S=="Q": return "Undifined. Infinite points"
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
-        if self.n=="2":
-            if self.S=="Z" or self.S=="Z+": return 0
-            elif self.S=="Q": return "Undifined."
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
-        if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
-            if self.S=="Z": return 8
-            elif self.S=="Z+": return 2
-            elif self.S=="Q": return "Undifined. Infinite points"
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
-        pass
+        if self.is_fermat_solvable==False: return 0
+        else:
+            if Common().is_prime(self.n)==True and self.n > 2:
+                if self.S=="Z": return 4
+                elif self.S=="Z+": return 1
+                elif self.S=="Q": return "Undifined. Infinite points"
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
+            if self.n=="2":
+                if self.S=="Z" or self.S=="Z+": return 0
+                elif self.S=="Q": return "Undifined."
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
+            if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
+                if self.S=="Z": return 8
+                elif self.S=="Z+": return 2
+                elif self.S=="Q": return "Undifined. Infinite points"
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
+            
 
     @property
     def points(self):
         """points on H"""
-        if Common().is_prime(self.n)==True and self.n > 2:
-            if self.S=="Z": return [((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))
-            elif self.S=="Z+": return ((self.n+1)/2, (self.n-1)/2)
-            elif self.S=="Q": return "Undifined. Infinite points"
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
-        if self.n=="2":
-            if self.S=="Z" or self.S=="Z+": return "empty set"
-            elif self.S=="Q": return "Undifined."
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
-        if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
-            if self.S=="Z": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))+self.negativPoints(((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2))
-            elif self.S=="Z+": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]
-            elif self.S=="Q": return "Undifined. Infinite points"
-            else: return Exception("Undifined. "+str(self.S)+" not defined")
+        if self.is_fermat_solvable==False: return "Solution is empty set"
+        else:
+            if Common().is_prime(self.n)==True and self.n > 2:
+                if self.S=="Z": return [((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))
+                elif self.S=="Z+": return ((self.n+1)/2, (self.n-1)/2)
+                elif self.S=="Q": return "Undifined. Infinite points"
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
+            if self.n=="2":
+                if self.S=="Z" or self.S=="Z+": return "empty set"
+                elif self.S=="Q": return "Undifined."
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
+            if Common().is_diff(Common().pfactors(self.n))==True and len(Common().pfactors(self.n))==2 and 2 not in Common().pfactors(self.n):
+                if self.S=="Z": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]+self.negativPoints(((self.n+1)/2, (self.n-1)/2))+self.negativPoints(((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2))
+                elif self.S=="Z+": return [((Common().pfactors(self.n)[0]+Common().pfactors(self.n)[1])/2, (Common().pfactors(self.n)[1]-Common().pfactors(self.n)[0])/2)]+[((self.n+1)/2, (self.n-1)/2)]
+                elif self.S=="Q": return "Undifined. Infinite points"
+                else: return Exception("Undifined. "+str(self.S)+" not defined")
        
 
 
@@ -243,7 +276,19 @@ class H:
             Q=self.double(Q); 
             if self.k[i]=="1": Q=self.add(Q, P)
         return Q
-
+    @property
+    def plot(self, points=False):
+        fig = pylab.gcf()
+        fig.canvas.manager.set_window_title('Hyperbo v1.0')
+        x = np.linspace(-(self.n+1)-self.n, (self.n+1)+self.n)
+        y = np.linspace(-(self.n+1)-self.n, self.n+self.n)
+        x, y = np.meshgrid(x, y)
+        plt.contour(x, y, (x**2-y**2), [self.n])
+        if self.points != "Solution is empty set": plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
+        plt.title("Curve of H_{} over {}".format(self.n, self.S))
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        return plt.show()
 class B:
     def __init__(self, n, S) -> None:
         self.n=n; self.S=S
@@ -390,10 +435,23 @@ class B:
             return "B_"+str(self.n)+" has infinite solutions over "+str(self.S)
         else:
             return "Undifined structure. "+str(self.S)+" not defined."
+    @property
+    def plot(self, points=False):
+        fig = pylab.gcf()
+        fig.canvas.manager.set_window_title('Hyperbo v1.0')
+        x = np.linspace(-(self.n+1)**2-self.n, (self.n+1)**2+self.n)
+        y = np.linspace(-(self.n+1)**2-self.n, self.n**2+self.n)
+        x, y = np.meshgrid(x, y)
+        plt.contour(x, y, (x**2-4*self.n*x-y**2), [0])
+        if self.points != "Solution is empty set": plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
+        plt.title("Curve of B_{} over {}".format(self.n, self.S))
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        return plt.show()
 
     def morphism(self, S1, S2):
         pass
-
+    
 
 #H(2020, "Z").info()
 #p=Common().pfactors(60)
@@ -409,4 +467,6 @@ class B:
 #P=(17/15, 8/15); Q=(5/3, 4/3); PP=(1, 12); QQ=(10, 9)
 #print(H(18, "F19").add(PP, QQ))$
 #print(Common().is_square(25/16))
-print(H(15, "Z").card)
+#print(H(100000000000000000000000000, "Z").card)
+print(H(10, "Z").plot)
+print(Common().facto(30))
