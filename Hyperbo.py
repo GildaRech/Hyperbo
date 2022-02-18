@@ -1,7 +1,6 @@
 #! -*- coding: utf-8 -*-
 import sys, random
 from math import sqrt
-#for drawing
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
