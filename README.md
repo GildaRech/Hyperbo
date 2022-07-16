@@ -11,6 +11,6 @@ It implements arithmetical results in relation with the Fermat factorization equ
 **B** This class implements methods used in hyperbola parametrizations B_n. 
             It provides methods related to the object B_n.
             
-![](https://github.com/GildaRech/Hyperbo/blob/main/img1.png?raw=true)
+![](https://github.com/GildaRech/Hyperbo/blob/main/img2.png?raw=true)
 
            
