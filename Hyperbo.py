@@ -242,6 +242,13 @@ class H(Common):
                                          e.g: for n=15 returns True.  
                      info: property that returns the general info on H_n
                      is_in_H(x): function that returns True or False whether if the point x is in H or not.
+                     negativPoints(P): function that returns negative points through Symmetry to P on Hn(x, y).
+                     card: property that returns the cardinal of H_n(x, y).
+                     points: property that returns the list of points of H_n over self.S structure
+                     add(P,Q): function that adds two points P and Q on H_n(x, y).
+                     double(P): function that doubles a point P on H_n(x, y).
+                     mul(k, P): function that multiplies a point P by a scalar k on H_n(x, y).
+                     plot: property that plots points on H_n(x, y). 
                     ..... 
     """
     def __init__(self, n:int, S:str) -> None:
@@ -447,6 +454,23 @@ class B(Common):
             This class implements methods used in hyperbola parametrizations B_n. 
             It provides methods related to the object B_n.
             FUNCTIONS:
+                     info: property that prints the general info about the object B_n(x, y) over self.S structure.
+                     is_in_B(x): function that checks whether a point is in B_n(x, y).
+                     nbr_pointsS4: property that returns the number of points on B_n over Z4.
+                     _points: property that returns points on B_n over Z4.
+                     U(i): function that returns the i term of the sequence U(i). i represents the number of primes.
+                           E.g: U(2) returns 5
+                    card: property that returns the cardinal of B_n(x, y).
+                    add(P, Q): function that adds two points P and Q on B_n(x, y).
+                    double(P): function that doubles a point on B_n(x, y).
+                    mul(k, P): function that multiplies a point P by a scalar k on B_n(x, y).
+                    card_sum: property that returns the sum S_n of cardinals on B_n(x, y).
+                    _productp: property that returns the product of prime divisors of n that make up n on B_n(x, y).
+                    pointsZ4: property that returns points on B_n over Z4 using algebraic results on B_n.
+                    negativPoints(l): function that returns the negative points on B_n(x, y) by symmetry from points in the list l. 
+                    points: function that returns points on B_n over different algebraic structures.
+                    plot: property that plots points on B_n(x, y).
+                    
             ....
     """
     def __init__(self, n, S) -> None:
@@ -468,7 +492,7 @@ class B(Common):
          Args: 
             None
          Returns:
-            int: the cardinal of H_n over self.S structure
+            str: the infos of B_n over self.S structure
         """
         self.start="\n________________________General Info on B_"+str(self.n)+": y^2=x^2-4*"+str(self.n)+"*x over "+str(self.S)+ " ________________________\n\n"
         if self.S=="Z" or self.S=="Q":self.group="It forms a group with the additive law defined as for P+Q=(1/(2*"+str(self.n)+")*((Xp-2*"+str(self.n)+")*(Xq-2*"+str(self.n)+")+Yp*Yq)+2*"+str(self.n)+", (1/(2*"+str(self.n)+")*(Yp*(Xq-2*"+str(self.n)+")+Yp*(Yq-2*"+str(self.n)+")) \n with neutral element O=(4*"+str(self.n)+", 0).\n"
