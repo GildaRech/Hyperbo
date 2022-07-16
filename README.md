@@ -1,7 +1,8 @@
 
 
-# Hyperbo
-**Hyperbo** is an open-source python package, a mathematical package that implements arithmetical computations on hyperbola. This work in particular, focuses on research findings on lattice points on hyperbolas in relation with Fermat factorization equation.
+# Hyperbo.    
+
+**Hyperbo** is an open-source python package, a mathematical package that implements arithmetical computations on hyperbola. This work in particular, focuses on research findings on lattice points on hyperbolas in relation with Fermat factorization equation in [Lattice Points on Fermat Factorization Method](https://www.hindawi.com/journals/jmath/2022/6360264/).  .
 
 It implements arithmetical results in relation with the Fermat factorization equation. This includes lattice points and solution computations, cardinals, group operations like addition and scalar multiplications on different algebraic structures, plots and general algebraic information and homomorphism relations.   
 
