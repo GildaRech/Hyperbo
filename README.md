@@ -3,16 +3,17 @@
 # Hyperbo
 **Hyperbo** is an open-source python package, a mathematical package that implements arithmetical computations on hyperbola. This work in particular, focuses on research findings on lattice points on hyperbolas in relation with Fermat factorization equation.
 
-It implements arithmetical results in relation with the Fermat factorization equation. This includes lattice points and solution computations, cardinals, group operations like addition and scalar multiplications on different algebraic structures, plots and general algebraic information and homomorphism relations.
+It implements arithmetical results in relation with the Fermat factorization equation. This includes lattice points and solution computations, cardinals, group operations like addition and scalar multiplications on different algebraic structures, plots and general algebraic information and homomorphism relations.   
 
+> This package considers mainly the following hyperbola forms to which any other parametrization can result through a morphism:    
             
 ![](https://github.com/GildaRech/Hyperbo/blob/main/img2.png?raw=true) 
 ---
 The Library has 3 classes: **Common**, **H** and **B**.
 
-- [x] **Common**:
-.
-This class contains common methods used in hyperbola parametrizations mainly H_n and B_n.  
+- [x] **Common**:   
+
+This class contains common methods used in hyperbola parametrizations mainly $H_n$ and $B_n$.  
 
     It provides its own verified autonomous functions for primality testing, gcd, inverse modulo, factor, and prime factorization.
     This is for the purpose of reducing dependencies to external libraries.   
@@ -41,5 +42,47 @@ This class contains common methods used in hyperbola parametrizations mainly H_n
             ```pair_sort(list)```: function that returns the sorted list of tuples by first element.
                              eg: pair_sort([(4, 6), (2, 5), (5, 7)]) returns [(2, 5), (4, 6), (5, 7)]
 ---
-- [x] **H**
-           
+- [x] **H**:   
+ 
+ This class implements methods used in hyperbola parametrizations $H_n$.    
+ 
+            It provides methods related to the object $H_n$.   
+            
+            FUNCTIONS:   
+            
+                     ```is_fermat_solvable```: property that returns True or False whether the Fermat equation has a solution or not.
+                                         e.g: for n=15 returns True.  
+                     ```info```: property that returns the general info on H_n
+                     ```is_in_H(x)```: function that returns True or False whether if the point x is in H or not.
+                     ```negativPoints(P)```: function that returns negative points through Symmetry to P on Hn(x, y).
+                     ```card```: property that returns the cardinal of H_n(x, y).
+                     ```points```: property that returns the list of points of H_n over self.S structure
+                     ```add(P,Q)```: function that adds two points P and Q on H_n(x, y).
+                     ```double(P)```: function that doubles a point P on H_n(x, y).
+                     ```mul(k, P)```: function that multiplies a point P by a scalar k on H_n(x, y).
+                     ```plot```: property that plots points on H_n(x, y). 
+  ---
+- [x] **B**:   
+
+This class implements methods used in hyperbola parametrizations $B_n$.    
+
+            It provides methods related to the object $B_n$.    
+            
+            FUNCTIONS:    
+            
+                     ```info```: property that prints the general info about the object B_n(x, y) over self.S structure.
+                     ```is_in_B(P)```: function that checks whether a point P is in B_n(x, y).
+                     ```nbr_pointsS4```: property that returns the number of points on B_n over Z4.
+                     ```_points```: property that returns points on B_n over Z4.
+                     ```U(i)```: function that returns the i term of the sequence U(i). i represents the number of primes.
+                           E.g: U(2) returns 5
+                    ```card```: property that returns the cardinal of B_n(x, y).
+                    ```add(P, Q)```: function that adds two points P and Q on B_n(x, y).
+                    ```double(P)```: function that doubles a point on B_n(x, y).
+                    ```mul(k, P)```: function that multiplies a point P by a scalar k on B_n(x, y).
+                    ```card_sum```: property that returns the sum S_n of cardinals on B_n(x, y).
+                    ```_productp```: property that returns the product of prime divisors of n that make up n on B_n(x, y).
+                    ```pointsZ4```: property that returns points on B_n over Z4 using algebraic results on B_n.
+                    ```negativPoints(l)```: function that returns the negative points on B_n(x, y) by symmetry from points in the list l. 
+                    ```points```: function that returns points on B_n over different algebraic structures.
+                    ```plot```: property that plots points on B_n(x, y).
