@@ -459,8 +459,7 @@ class B(Common):
             self.p1="\nwhich inverse is            f^-1: H_"+str(self.n)+"("+str(self.S)+") ------> B_"+str(self.n)+"(x, y)\n                                   (X, Y) |-----> (2*"+str(self.n)+"*(X+1), 2*"+str(self.n)+"*Y)\n"
             self.morphism="There exists a morphism over Q, f: B_"+str(self.n)+"   ------>      H_"+str(self.n)+"(Q)\n                                  (x, y)  |-----> ((x-2*"+str(self.n)+")/2*"+str(self.n)+", y/2*"+str(self.n)+") "+self.p1
         else:
-            self.morphism=""
-        pass
+            self.morphism=f"There isn't a morphism Between H_{self.n} and B_{self.n} over {self.S}"
 
     
     @property
@@ -474,7 +473,8 @@ class B(Common):
         self.start="\n________________________General Info on B_"+str(self.n)+": y^2=x^2-4*"+str(self.n)+"*x over "+str(self.S)+ " ________________________\n\n"
         if self.S=="Z" or self.S=="Q":self.group="It forms a group with the additive law defined as for P+Q=(1/(2*"+str(self.n)+")*((Xp-2*"+str(self.n)+")*(Xq-2*"+str(self.n)+")+Yp*Yq)+2*"+str(self.n)+", (1/(2*"+str(self.n)+")*(Yp*(Xq-2*"+str(self.n)+")+Yp*(Yq-2*"+str(self.n)+")) \n with neutral element O=(4*"+str(self.n)+", 0).\n"
         else: self.group="B_{} does not form a group over {}, But nevertheless ".format(self.n, self.S)
-        self.form="This structure is isomorphic to the hyperbola x^2/a^2-y^2/b^2 = 1 with a=b=sqrt("+str(self.n)+"): Therefore \n"
+        if not self.S in ["Z", "Z+", "Z4"]: self.form="This structure is isomorphic to the hyperbola x^2/a^2-y^2/b^2 = 1 with a=b=sqrt("+str(self.n)+"). \n"
+        else: self.form=""
         self.inf=str(self.start)+str(self.group)+"\n"+str(self.form)+str(self.morphism)
         print(self.inf)
         return ""
