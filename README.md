@@ -11,6 +11,5 @@ It implements arithmetical results in relation with the Fermat factorization equ
 **B** This class implements methods used in hyperbola parametrizations B_n. 
             It provides methods related to the object B_n.
             
-<img src="https://render.githubusercontent.com/render/math?math={ $\mathcal{H}_{n}=\lbrace (x, y) \in \mathcal{R}^2 \ | \ x^2-y^2=n\rbrace$ where $\mathcal{R}=\mathbb{Z}, \ \mathbb{Z}_{\geq0}$ and $\mathbb{F}_{p}$
-}#gh-light-mode-only">
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
            
