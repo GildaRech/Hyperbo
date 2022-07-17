@@ -1,6 +1,8 @@
+# Authors: Gilda Bansimba, Régis Babindamana, Basile Bossoto
+# Maintainer's Email: bansimbagilda@gmail.com
+
 #! -*- coding: utf-8 -*-
 import sys, random
-from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -165,7 +167,7 @@ class Common:
         while self.n1%2==0:
             self.l.append(2)
             self.n1=self.n1/2
-        for i in range(3, int(sqrt(self.n))+1, 2):
+        for i in range(3, int(np.sqrt(self.n))+1, 2):
             while self.n1%i==0:
                 self.l.append(i)
                 self.n1=self.n1/i
@@ -185,8 +187,8 @@ class Common:
         self.x=x
         if "/" in str(self.x):
             xp1=int(str(self.x)[:str(self.x).index("/")]); xp2=int(str(self.x)[str(self.x).index("/")+1:])
-            if int(sqrt(xp1))**2==xp1 and int(sqrt(xp2))**2==xp2: return True
-        if int(sqrt(int(self.x)))**2==int(self.x):
+            if int(np.sqrt(xp1))**2==xp1 and int(np.sqrt(xp2))**2==xp2: return True
+        if int(np.sqrt(int(self.x)))**2==int(self.x):
             return True
         return False
 
@@ -370,9 +372,9 @@ class H(Common):
                 else: return Exception("Undifined. "+str(self.S)+" not defined")
             else:
                 pts=[]
-                for x in range(int(sqrt(self.n))+1, int(self.n)**2):
+                for x in range(int(np.sqrt(self.n))+1, int(self.n)**2):
                     if self.is_in_H(x)==True:
-                        pts.append((x, int(sqrt(x**2-int(self.n)))))
+                        pts.append((x, int(np.sqrt(x**2-int(self.n)))))
                 return pts
 
 
@@ -455,7 +457,7 @@ class B(Common):
             It provides methods related to the object B_n.
             FUNCTIONS:
                      info: property that prints the general info about the object B_n(x, y) over self.S structure.
-                     is_in_B(x): function that checks whether a point is in B_n(x, y).
+                     is_in_B(P): function that checks whether a point P is in B_n(x, y).
                      nbr_pointsS4: property that returns the number of points on B_n over Z4.
                      _points: property that returns points on B_n over Z4.
                      U(i): function that returns the i term of the sequence U(i). i represents the number of primes.
@@ -546,7 +548,7 @@ class B(Common):
         self.pt=[]
         for i in range(4*int(self.n), (int(self.n)+1)**2+1):
             if self.is_in_B(i)==True:
-                self.pt.append((i, int(sqrt(i**2-4*int(self.n)*i))))
+                self.pt.append((i, int(np.sqrt(i**2-4*int(self.n)*i))))
         return self.pt
   
     def U(self, i:int):
@@ -729,29 +731,3 @@ class B(Common):
         plt.show()
 
     
-
-#H(2020, "Z").info()
-#p=self.pfactors(60)
-#print(p)
-#print(B(8, "Z").pfactors())
-#print(B(60, "Z").card)
-#P=(80, 40); Q=(64, 16); R=(108, 72)
-#print(B(15, "Z").add(R, P))
-#print(B(15, "Z").mul(100, P))
-#l=[(80.0, 40.0), (108.0, 72.0), (60.0, 0.0), (256.0, 224.0), (64, 16)]
-#print(B(210, "Z4").points)
-#print(self.inverse_modulo(3, 7))
-#P=(17/15, 8/15); Q=(5/3, 4/3); PP=(1, 12); QQ=(10, 9)
-#print(H(18, "F19").add(PP, QQ))$
-#print(self.is_square(25/16))
-#print(H(100000000000000000000000000, "Z").card)
-#print(B(15, "Z").info)
-#print(self.facto(30))
-#print(B(15, "Z").card_sum)
-#print(Common(15).extended_euclidean(11, 13)) 
-#print(Common(15).inverse_modulo(5, 11))
-#print(Common(60).facto(60))
-#print(Common(60).pfactors(60))
-#print(Common(15).pfactors(15))
-#print(Common(15).is_square(16))
-#print(Common(15).pair_sort([(4, 6), (2, 5), (5, 7)]))
