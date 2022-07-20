@@ -850,17 +850,3 @@ class Pell(Common):
         plt.ylabel("Y")
         plt.show()
         
-    
-
-#b=H(15, "Z")
-#print(b.info)
-#print(b.card)
-# addition in Z of points that gives non integer still works and returns results. That must be prevented and removed from 
-# being returned. Instead a message like "Not possible in Z" could be returned.
-# 2. Also computations in Q have to be returning results in Fractional forms not decimal one. So the Fraction Library could be used for that. 
-b=B(15, "Z")
-#print(b.points)
-P=(108, 72); Q=(256, 224);
-#Q1=(4, 1); Q2=(8, 7)
-print(b.mul(5, Q))
-#print(b.add(Q1, Q2))
