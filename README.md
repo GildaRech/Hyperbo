@@ -89,3 +89,17 @@ This class implements methods used in hyperbola parametrizations $B_n$.
                     ```negativPoints(l)```: function that returns the negative points on B_n(x, y) by symmetry from points in the list l. 
                     ```points```: function that returns points on B_n over different algebraic structures.
                     ```plot```: property that plots points on B_n(x, y).
+             
+  ---
+- [x] **Pell**:   
+
+This class implements methods used in Pell hyperbola parametrizations  $x^2-Dy^2=1$.      
+ 
+            It provides methods related to the object Pell defined by x^2-Dy^2=1.    
+            
+            FUNCTIONS: 
+                     ```is_in_Pell(P)```: function that checks whether a point P is in Pell_D(x, y)
+                     ```card```: property that returns the cardinal of Pell_D(x, y).
+                     ```add(P, Q)```: function that adds two points P and Q on Pell_D(x, y).
+                     ```double(P)```: function that doubles a point on Pell_D(x, y).
+                     ```mul(k, P)```: function that multiplies a point P by a scalar k on Pell_D(x, y).
