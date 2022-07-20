@@ -1,4 +1,4 @@
-# Authors: Gilda Bansimba, Régis Babindamana, Basile Bossoto
+# Authors: Gilda Bansimba
 # Maintainer's Email: bansimbagilda@gmail.com
 
 #! -*- coding: utf-8 -*-
@@ -234,6 +234,16 @@ class Common:
                 if self.l[j+1][0]<self.l[j][0]:
                     self.a = self.l[j]; self.l[j] = self.l[j+1]; self.l[j+1]=self.a
         return self.l
+    
+    def is_in_Z(self, number)->bool:
+        """ function that checks if a given number can be considered as an integer or not
+         Args:
+            number (loat): the number to check.
+         Returns:
+            bool: True is yes False else
+         Eg: is_in_Z(123.0) returns True or is_in_Z(123.01) returns False
+        """
+        return True if not "." in str(number) else True if (str(number)[str(number).index(".")+1:] =="0" and self.is_same(list(str(number)[str(number).index(".")+1:]))==True) else False 
 
 class H(Common):
     """
@@ -251,7 +261,7 @@ class H(Common):
                      double(P): function that doubles a point P on H_n(x, y).
                      mul(k, P): function that multiplies a point P by a scalar k on H_n(x, y).
                      plot: property that plots points on H_n(x, y). 
-                    ..... 
+                     
     """
     def __init__(self, n:int, S:str) -> None:
         super().__init__(n)
@@ -288,7 +298,8 @@ class H(Common):
         """
         self.start="\n________________________General Info on H_"+str(self.n)+": x^2-y^2="+str(self.n)+" over "+str(self.S)+ "________________________\n\n"
         self.form="furthermore H_"+str(self.n)+" is isomorphic to the hyperbola x^2/a^2-y^2/b^2 = 1 with a=b=sqrt("+str(self.n)+")"
-        self.group="It forms a group with the additive law defined as for P+Q=(Xp*Xq+Yp*Yq, Xp*Yq+Xq*Yp),\nwith neutral element O=(1, 0).\n"
+        self.c=[np.sqrt(self.n) if self.is_square(self.n)==True else f"sqrt({self.n})"]
+        self.group=f"It forms a group with the additive law defined as for P+Q=(Xp*Xq+Yp*Yq, Xp*Yq+Xq*Yp),\nwith neutral element O=(1, 0), in this case O=({self.c[0]}, 0).\n"
         if self.is_fermat_solvable==False:
             self.status=str(self.n)+" is not Factorizable by Fermat Method ie cannot be represented as difference of two squares"
         else:
@@ -386,7 +397,8 @@ class H(Common):
             point: result of the addition of P and Q 
         """
         xp, yp, xq, yq = P[0], P[1], Q[0], Q[1]
-        if self.S in ["Z", "Q"]: return (xp*xq+yp*yq, xp*yq+xq*yp)
+        X, Y = xp*xq+yp*yq, xp*yq+xq*yp
+        if self.S in ["Z", "Q"]: return (X, Y) if self.S=="Q" else (X, Y) if self.is_in_Z(X)==True and self.is_in_Z(Y)==True else f"Result not defined in {self.S}"
         elif self.S.startswith("F"): 
             self.p=int(self.S[1:])
             if "/" in str(xp):xp=int(str(xp)[:str(xp).index("/")])*self.inverse_modulo(int(str(xp)[str(xp).index("/")+1:]), self.p)
@@ -405,7 +417,8 @@ class H(Common):
             tuple: result of doubling of P ie 2P 
         """
         xp, yp = P[0], P[1]
-        if self.S in ["Z", "Q"]: return (xp**2+yp**2, 2*xp*yp)
+        X, Y = xp**2+yp**2, 2*xp*yp
+        if self.S in ["Z", "Q", "Z4"]: return (X, Y) if self.S=="Q" else (X, Y) if self.is_in_Z(X)==True and self.is_in_Z(Y)==True else f"Result not defined in {self.S}"
         elif self.S.startswith("F"): 
             self.p=int(self.S[1:])
             if "/" in str(xp):xp=int(str(xp)[:str(xp).index("/")])*self.inverse_modulo(int(str(xp)[str(xp).index("/")+1:]), self.p)
@@ -427,7 +440,9 @@ class H(Common):
         self.k=bin(self.k)[2:]; self.k=str(self.k); Q=P
         for i in range(1, len(self.k)):
             Q=self.double(Q); 
+            if type(Q)==str: return f"Result not defined in {self.S}"
             if self.k[i]=="1": Q=self.add(Q, P)
+            if type(Q)==str: return f"Result not defined in {self.S}"
         return Q
 
     @property
@@ -440,12 +455,12 @@ class H(Common):
         """
         print(self.points)
         fig = pylab.gcf()
-        fig.canvas.manager.set_window_title('Hyperbo v1.0')
+        fig.canvas.manager.set_window_title('Hyperbo v1.0.3')
         x = np.linspace(-(self.n+1)-self.n, (self.n+1)+self.n)
         y = np.linspace(-(self.n+1)-self.n, self.n+self.n)
         x, y = np.meshgrid(x, y)
         plt.contour(x, y, (x**2-y**2), [self.n])
-        if self.points != "Solution is empty set" and self.points != None: plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
+        if self.points != "Solution is empty set" and self.points != f"B_{self.n} has infinite solutions over Q" and self.points != None: plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
         plt.title("Curve of H_{} over {}".format(self.n, self.S))
         plt.xlabel("X")
         plt.ylabel("Y")
@@ -462,16 +477,16 @@ class B(Common):
                      _points: property that returns points on B_n over Z4.
                      U(i): function that returns the i term of the sequence U(i). i represents the number of primes.
                            E.g: U(2) returns 5
-                    card: property that returns the cardinal of B_n(x, y).
-                    add(P, Q): function that adds two points P and Q on B_n(x, y).
-                    double(P): function that doubles a point on B_n(x, y).
-                    mul(k, P): function that multiplies a point P by a scalar k on B_n(x, y).
-                    card_sum: property that returns the sum S_n of cardinals on B_n(x, y).
-                    _productp: property that returns the product of prime divisors of n that make up n on B_n(x, y).
-                    pointsZ4: property that returns points on B_n over Z4 using algebraic results on B_n.
-                    negativPoints(l): function that returns the negative points on B_n(x, y) by symmetry from points in the list l. 
-                    points: function that returns points on B_n over different algebraic structures.
-                    plot: property that plots points on B_n(x, y).
+                     card: property that returns the cardinal of B_n(x, y).
+                     add(P, Q): function that adds two points P and Q on B_n(x, y).
+                     double(P): function that doubles a point on B_n(x, y).
+                     mul(k, P): function that multiplies a point P by a scalar k on B_n(x, y).
+                     card_sum: property that returns the sum S_n of cardinals on B_n(x, y).
+                     _productp: property that returns the product of prime divisors of n that make up n on B_n(x, y).
+                     pointsZ4: property that returns points on B_n over Z4 using algebraic results on B_n.
+                     negativPoints(l): function that returns the negative points on B_n(x, y) by symmetry from points in the list l. 
+                     points: function that returns points on B_n over different algebraic structures.
+                     plot: property that plots points on B_n(x, y).
                     
             ....
     """
@@ -503,7 +518,6 @@ class B(Common):
         else: self.form=""
         self.inf=str(self.start)+str(self.group)+"\n"+str(self.form)+str(self.morphism)
         print(self.inf)
-        return ""
 
     def is_in_B(self, x):
         """ function that checks whether a point is in B_n(x, y).
@@ -604,7 +618,8 @@ class B(Common):
         xp, yp, xq, yq = P[0], P[1], Q[0], Q[1]
         x=((xp-2*self.n)*(xq-2*self.n)+yp*yq)/(2*self.n)+2*self.n
         y=(yp*(xq-2*self.n)+yq*(xp-2*self.n))/(2*self.n)
-        return (x, y)
+        return (x, y) if self.S=="Q" else (x, y) if self.is_in_Z(x)==True and self.is_in_Z(y)==True else f"Result not defined in {self.S}"
+       
 
     def double(self, P):
         """ function that doubles a point on B_n(x, y).
@@ -616,7 +631,7 @@ class B(Common):
         xp, yp = P[0], P[1]
         x=((xp-2*self.n)**2+yp**2)/(2*self.n)+2*self.n
         y=(yp*(xp-2*self.n))/self.n
-        return (x, y)
+        return (x, y) if self.S=="Q" else (x, y) if self.is_in_Z(x)==True and self.is_in_Z(y)==True else f"Result not defined in {self.S}"
 
     def mul(self, k, P):
         """ function that multiplies a point by a scalar on B_n(x, y).
@@ -632,10 +647,14 @@ class B(Common):
         self.k_bin=str(self.k_bin); Q=self.P 
         for i in range(1, len(self.k_bin)):
             Q = self.double(Q)
+            if type(Q)==str: return f"Result not defined in {self.S}"
             if self.k_bin[i]=="1":
                 Q=self.add(Q, self.P)
-        return (Q)
-
+                if type(Q)==str: return f"Result not defined in {self.S}"
+            print(f" Result not defined in {self.S}")
+        x, y = Q
+        return (x, y) if self.S=="Q" else (x, y) if self.is_in_Z(x)==True and self.is_in_Z(y)==True else f"Result not defined in {self.S}"
+ 
     @property
     def card_sum(self):
         """ property that returns the sum S_n of cardinals on B_n(x, y).
@@ -719,15 +738,129 @@ class B(Common):
             plot: the plot
         """
         fig = pylab.gcf()
-        fig.canvas.manager.set_window_title('Hyperbo v1.0')
+        fig.canvas.manager.set_window_title('Hyperbo v1.0.3')
         x = np.linspace(-(self.n+1)**2-self.n, (self.n+1)**2+self.n)
         y = np.linspace(-(self.n+1)**2-self.n, self.n**2+self.n)
         x, y = np.meshgrid(x, y)
         plt.contour(x, y, (x**2-4*self.n*x-y**2), [0])
-        if self.points != "Solution is empty set" and self.points != None: plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
+        if self.points != "Solution is empty set" and self.points != f"B_{self.n} has infinite solutions over Q" and self.points != None: plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
         plt.title("Curve of B_{} over {}".format(self.n, self.S))
         plt.xlabel("X")
         plt.ylabel("Y")
         plt.show()
 
+class Pell(Common):
+    """ This class implements methods used in Pell hyperbola parametrizations. 
+            It provides methods related to the object Pell defined by x^2-Dy^2=1.
+            FUNCTIONS:
+                     is_in_Pell(P): function that checks whether a point P is in Pell_D(x, y)
+                     card: property that returns the cardinal of Pell_D(x, y).
+                     add(P, Q): function that adds two points P and Q on Pell_D(x, y).
+                     double(P): function that doubles a point on Pell_D(x, y).
+                     mul(k, P): function that multiplies a point P by a scalar k on Pell_D(x, y).
+                     
+    """
+    def __init__(self, D, S) -> None:
+        super().__init__(D)
+        self.D=D; self.S=S
+        if not self.is_in_Z(self.D) and self.D > 0: return f"Invalid value of D.Must be a positive integer"
+        
+    def is_in_Pell(self, P):
+        """ function that checks whether the point P is in Pell_D(x, y).
+        
+        Args:
+            P (tuple): a point that one wants to check if it is in Pell_D(x, y)
+
+        Returns:
+            bool: True if x is in Pell_D(x, y), False else
+        """
+        if self.S.startswith("F"): p=self.S[1:]
+        return P[0]**2-self.D*P[1]**2==1 if self.S in ["Z", "Z4", "Q"] else (P[0]**2-self.D*P[1]**2)%p==1%p
     
+    @property
+    def points(self)->list:
+        # I am completing
+        pass
+    
+    @property
+    def card(self)->int:
+        # I am completing
+        pass
+    
+    def add(self, P, Q)->tuple:
+        """ function that adds two points on Pell_D(x, y).
+        Args:
+            P, Q (tuples): P and Q points in Pell_D
+        Returns:
+            point: result of the addition of P and Q 
+        """
+        if self.S.startswith("F"): p=self.S[1:]
+        x, y = (P[0]*Q[0]+self.D*P[1]*Q[1], P[0]*Q[1]+P[1]*Q[0])
+        return (x, y) if self.S in ["Q", "R"] else (x%p, y%p) if self.S.startswith("F") else (x, y) if self.S in ["Z", "Z4"] and self.is_in_Z(x)==True and self.is_in_Z(y)==True else f"Result not defined in {self.S}"
+    
+    def double(self, P)->tuple:
+        """ function that doubles a point on Pell_D(x, y).
+        Args:
+            P (tuple): P point in Pell_D
+        Returns:
+            tuple: result of doubling of P ie 2P 
+        """
+        if self.S.startswith("F"): p=self.S[1:]
+        x, y = (P[0]*P[0]+self.D*P[1]*P[1], 2*P[0]*P[1])
+        return (x, y) if self.S in ["Q", "R"] else (x%p, y%p) if self.S.startswith("F") else (x, y) if self.S in ["Z", "Z4"] and self.is_in_Z(x)==True and self.is_in_Z(y)==True else f"Result not defined in {self.S}"
+
+    
+    def mul(self, k:int, P)->tuple:
+        """ function that multiplies a point by a scalar on Pell_D(x, y).
+        Args:
+            k (int): a scalar
+            P (tuple): P point in Pell_D
+        Returns:
+            tuple: result of multiplication of P by k ie kP 
+        """
+        self.k, self.P = k, P
+        if self.k==0 : raise Exception("Invalid multiplicator k")
+        self.k_bin=bin(self.k)[2:]
+        self.k_bin=str(self.k_bin); Q=self.P 
+        for i in range(1, len(self.k_bin)):
+            Q = self.double(Q)
+            if type(Q)==str: return f"Result not defined in {self.S}"
+            if self.k_bin[i]=="1":
+                Q=self.add(Q, self.P)
+                if type(Q)==str: return f"Result not defined in {self.S}"
+        return (Q)
+    
+    @property
+    def plot(self):
+        """ property that plots points on Pell_D(x, y).
+        Args:
+            None
+        Returns:
+            plot: the plot
+        """
+        fig = pylab.gcf()
+        fig.canvas.manager.set_window_title('Hyperbo v1.0.3')
+        x = np.linspace(-(self.n+1)**2-self.n, (self.n+1)**2+self.n)
+        y = np.linspace(-(self.n+1)**2-self.n, self.n**2+self.n)
+        x, y = np.meshgrid(x, y)
+        plt.contour(x, y, (x**2-self.D*y**2-1), [0])
+        if self.points != "Solution is empty set" and self.points != f"Pell_{self.D} has infinite solutions over Q" and self.points != None: plt.scatter([x[0] for x in self.points ], [x[1] for x in self.points])
+        plt.title("Curve of B_{} over {}".format(self.n, self.S))
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        plt.show()
+        
+    
+
+#b=H(15, "Z")
+#print(b.info)
+#print(b.card)
+# addition in Z of points that gives non integer still works and returns results. That must be prevented and removed from 
+# being returned. Instead a message like "Not possible in Z" could be returned.
+# 2. Also computations in Q have to be returning results in Fractional forms not decimal one. So the Fraction Library could be used for that. 
+b=B(15, "Z")
+#print(b.points)
+P=(108, 72); Q=(256, 224);
+#Q1=(4, 1); Q2=(8, 7)
+print(b.mul(5, Q))
+#print(b.add(Q1, Q2))

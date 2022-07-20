@@ -1,1 +1,2 @@
-from Hyperbo import *
+from .Hyperbo import B, H, Common
+

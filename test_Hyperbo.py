@@ -38,6 +38,9 @@ class TestCommon(unittest.TestCase):
         self.assertEqual(Co.pair_sort([(7, 5), (2, 3)]), [(2, 3), (7, 5)])
         self.assertEqual(Co.pair_sort([(60, 0), (108, 72), (80, 40), (64, 16), (256, 224)]), [(60, 0), (64, 16), (80, 40), (108, 72), (256, 224)])
     
+    def test_is_in_Z(self):
+        self.assertTrue(Co.is_in_Z(123.00))
+        self.assertFalse(Co.is_in_Z(123.001))
 
 class TestH(unittest.TestCase):
     """
@@ -169,7 +172,14 @@ class TestB(unittest.TestCase):
     def test_plot(self):
         pass    
 
-
+class TestPell(unittest.TestCase):
+    """
+    Args:
+        unittest (_type_): _description_
+        This class tests all methods of Pell class
+    """
+    # I am completing
+    pass
 
 
 if __name__=='__main__':
